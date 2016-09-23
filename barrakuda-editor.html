@@ -65,7 +65,12 @@ Simple Editor for Barrakuda
   <template>
     <style>
       :host {
-        display: block;
+        display: flex;
+        min-height: 1em;
+        flex-direction: column;
+      }
+      #code{
+        flex: 1;
       }
       .CodeMirror {border: 1px solid silver; margin-bottom: 1em; }
       dt { text-indent: -2em; padding-left: 2em; margin-top: 1em; }

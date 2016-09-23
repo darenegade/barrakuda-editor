@@ -92,6 +92,10 @@ Simple Editor for Barrakuda
         this.editor.refresh();
       },
 
+      getModel: function () {
+        return this.editor.getValue();
+      },
+
       ready: function () {
 
         CodeMirror.defineSimpleMode("barrakuda", {

@@ -1,6 +1,31 @@
-# \<Barrakuda-Editor\>
+# \<barrakuda-editor\>
 
 Simple Editor for Barrakuda
+
+## Use
+```
+<barrakuda-editor theme="dracula"> Init Text </barrakuda-editor>
+...
+<script>
+ document.querySelector('barrakuda-editor').refresh();
+</script>
+```
+
+Properties:
+
+* theme: Code Mirror theme to use, on missing property the default will be used
+
+
+InnerHTML:
+
+Insert here the inital text for the editor.
+
+Functions:
+
+Method access via: `document.querySelector('barrakuda-editor').<functionName>()`
+
+* refresh: Refresh the Editor to fix bad behavior
+* getModel: Getter for the inner model text
 
 ## Install the Polymer-CLI
 

@@ -11,16 +11,16 @@ Simple Editor for Barrakuda
 </script>
 ```
 
-Properties:
+### Properties:
 
 * theme: Code Mirror theme to use, on missing property the default will be used
 
 
-InnerHTML:
+### InnerHTML:
 
 Insert here the inital text for the editor.
 
-Functions:
+### Functions:
 
 Method access via: `document.querySelector('barrakuda-editor').<functionName>()`
 

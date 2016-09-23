@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Barrakuda-Editor demo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <script type="javascript" src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+
+    <link rel="import" href="../barrakuda-editor.html">
+
+    <style is="custom-style" include="demo-pages-shared-styles">
+      demo-snippet{
+        width: 800px;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="vertical-section-container centered">
+      <h3>Basic Barrakuda-Editor Demo</h3>
+      <demo-snippet>
+        <template>
+          <barrakuda-editor theme="dracula">domain myDomain package de.muenchen.mypackage version 0.1;
+
+serviceModel myModel package de.muenchen.mypackage.myDomain version 0.1 {
+
+  entity myEntity { }
+
+  //...
+}
+          </barrakuda-editor>
+        </template>
+      </demo-snippet>
+    </div>
+
+  </body>
+<script>
+
+ document.querySelector('barrakuda-editor').refresh();
+</script>
+</html>

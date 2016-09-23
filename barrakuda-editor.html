@@ -1,0 +1,222 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="stylesheet" href="../codemirror/lib/codemirror.css">
+<link rel="stylesheet" href="../codemirror/addon/hint/show-hint.css">
+<link rel="stylesheet" href="../codemirror/theme/3024-day.css">
+<link rel="stylesheet" href="../codemirror/theme/3024-night.css">
+<link rel="stylesheet" href="../codemirror/theme/abcdef.css">
+<link rel="stylesheet" href="../codemirror/theme/ambiance.css">
+<link rel="stylesheet" href="../codemirror/theme/base16-dark.css">
+<link rel="stylesheet" href="../codemirror/theme/bespin.css">
+<link rel="stylesheet" href="../codemirror/theme/base16-light.css">
+<link rel="stylesheet" href="../codemirror/theme/blackboard.css">
+<link rel="stylesheet" href="../codemirror/theme/cobalt.css">
+<link rel="stylesheet" href="../codemirror/theme/colorforth.css">
+<link rel="stylesheet" href="../codemirror/theme/dracula.css">
+<link rel="stylesheet" href="../codemirror/theme/eclipse.css">
+<link rel="stylesheet" href="../codemirror/theme/elegant.css">
+<link rel="stylesheet" href="../codemirror/theme/erlang-dark.css">
+<link rel="stylesheet" href="../codemirror/theme/hopscotch.css">
+<link rel="stylesheet" href="../codemirror/theme/icecoder.css">
+<link rel="stylesheet" href="../codemirror/theme/isotope.css">
+<link rel="stylesheet" href="../codemirror/theme/lesser-dark.css">
+<link rel="stylesheet" href="../codemirror/theme/liquibyte.css">
+<link rel="stylesheet" href="../codemirror/theme/material.css">
+<link rel="stylesheet" href="../codemirror/theme/mbo.css">
+<link rel="stylesheet" href="../codemirror/theme/mdn-like.css">
+<link rel="stylesheet" href="../codemirror/theme/midnight.css">
+<link rel="stylesheet" href="../codemirror/theme/monokai.css">
+<link rel="stylesheet" href="../codemirror/theme/neat.css">
+<link rel="stylesheet" href="../codemirror/theme/neo.css">
+<link rel="stylesheet" href="../codemirror/theme/night.css">
+<link rel="stylesheet" href="../codemirror/theme/panda-syntax.css">
+<link rel="stylesheet" href="../codemirror/theme/paraiso-dark.css">
+<link rel="stylesheet" href="../codemirror/theme/paraiso-light.css">
+<link rel="stylesheet" href="../codemirror/theme/pastel-on-dark.css">
+<link rel="stylesheet" href="../codemirror/theme/railscasts.css">
+<link rel="stylesheet" href="../codemirror/theme/rubyblue.css">
+<link rel="stylesheet" href="../codemirror/theme/seti.css">
+<link rel="stylesheet" href="../codemirror/theme/solarized.css">
+<link rel="stylesheet" href="../codemirror/theme/the-matrix.css">
+<link rel="stylesheet" href="../codemirror/theme/tomorrow-night-bright.css">
+<link rel="stylesheet" href="../codemirror/theme/tomorrow-night-eighties.css">
+<link rel="stylesheet" href="../codemirror/theme/ttcn.css">
+<link rel="stylesheet" href="../codemirror/theme/twilight.css">
+<link rel="stylesheet" href="../codemirror/theme/vibrant-ink.css">
+<link rel="stylesheet" href="../codemirror/theme/xq-dark.css">
+<link rel="stylesheet" href="../codemirror/theme/xq-light.css">
+<link rel="stylesheet" href="../codemirror/theme/yeti.css">
+<link rel="stylesheet" href="../codemirror/theme/zenburn.css">
+<script rel="import" src="../codemirror/lib/codemirror.js"></script>
+<script rel="import" src="../codemirror/addon/mode/simple.js"></script>
+<script rel="import" src="../codemirror/addon/hint/show-hint.js"></script>
+<script rel="import" src="../codemirror/mode/xml/xml.js"></script>
+<script rel="import" src="../codemirror/mode/markdown/markdown.js"></script>
+<script rel="import" src="../codemirror/addon/hint/anyword-hint.js"></script>
+
+<!--
+`Barrakuda-Editor`
+Simple Editor for Barrakuda
+
+@demo demo/index.html 
+-->
+
+<dom-module id="barrakuda-editor">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      .CodeMirror {border: 1px solid silver; margin-bottom: 1em; }
+      dt { text-indent: -2em; padding-left: 2em; margin-top: 1em; }
+      dd { margin-left: 1.5em; margin-bottom: 1em; }
+      dt {margin-top: 1em;}
+    </style>
+    <div id="code"></div>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'barrakuda-editor',
+
+      properties: {
+        theme: { type: String, value: "default" },
+
+        value: {type: String, value: function () {
+          return this.value || this.textContent;
+        }}
+      },
+
+      refresh: function() {
+        this.editor.refresh();
+      },
+
+      ready: function () {
+
+        CodeMirror.defineSimpleMode("barrakuda", {
+          // The start state contains the rules that are intially used
+          start : [
+            {
+              token : "comment",
+              regex : "\\/\\/.*$"
+            },
+            {
+              token : "comment", // multi line comment
+              regex : "\\/\\*",
+              next : "comment"
+            }, {
+              token : "string", // single line
+              regex : '["](?:(?:\\\\.)|(?:[^"\\\\]))*?["]'
+            }, {
+              token : "string", // single line
+              regex : "['](?:(?:\\\\.)|(?:[^'\\\\]))*?[']"
+            }, {
+              token : "constant.numeric", // hex
+              regex : /0(?:[xX][0-9a-fA-F][0-9a-fA-F_]*|[bB][01][01_]*)[LlSsDdFfYy]?\b/
+            }, {
+              token : "constant.numeric", // float
+              regex : /[+-]?\d[\d_]*(?:(?:\.[\d_]*)?(?:[eE][+-]?[\d_]+)?)?[LlSsDdFfYy]?\b/
+            }, {
+              token : "constant.language.boolean",
+              regex : "(?:true|false)\\b"
+            }, {
+              regex: /\W(?:AddTable|CreateForm|ReadEditComponent|ReadForm|ReadWriteForm|Table|UpdateForm|any|appearsInMenu|auditAll|auditChanges|auditNone|businessAction|button|cascadeTypeRemove|component|customListType|customLogicType|customNumberType|customTextType|customTimeType|date|dateAndTime|domain|entity|extends|external|externalEntity|for|given|guiModel|handleLikeAttribute|inTheFuture|inThePast|listOf|long|mainFeature|mainview|manyToMany|manyToOne|navigatesTo|noBarrakudaKeyWord|noJavaKeyWord|normal|oneToMany|oneToOne|optional|package|password|pointNumber|purpose|relComponent|searchable|serviceModel|suffices|then|time|type|valueObject|version|view)\b/,
+              token: "keyword"
+            }, {
+              regex: /(?:AddTable|CreateForm|ReadEditComponent|ReadForm|ReadWriteForm|Table|UpdateForm|any|appearsInMenu|auditAll|auditChanges|auditNone|businessAction|button|cascadeTypeRemove|component|customListType|customLogicType|customNumberType|customTextType|customTimeType|date|dateAndTime|domain|entity|extends|external|externalEntity|for|given|guiModel|handleLikeAttribute|inTheFuture|inThePast|listOf|long|mainFeature|mainview|manyToMany|manyToOne|navigatesTo|noBarrakudaKeyWord|noJavaKeyWord|normal|oneToMany|oneToOne|optional|package|password|pointNumber|purpose|relComponent|searchable|serviceModel|suffices|then|time|type|valueObject|version|view)\b/,
+              token: "keyword",
+              sol: true
+            }, {
+              token : "lparen",
+              regex : "[[({]"
+            }, {
+              token : "rparen",
+              regex : "[\\])}]"
+            }, {
+              token : "text",
+              regex : "\\s+"
+            }
+          ],
+          comment : [
+            {
+              token : "comment", // closing comment
+              regex : ".*?\\*\\/",
+              next : "start"
+            }, {
+              token : "comment", // comment spanning whole line
+              regex : ".+"
+            }
+          ],
+          // The meta property contains global information about the mode. It
+          // can contain properties like lineComment, which are supported by
+          // all modes, and also directives like dontIndentStates, which are
+          // specific to simple modes.
+          meta: {
+            dontIndentStates: ["comment"],
+            lineComment: "//"
+          }
+        });
+
+        var WORD = /[\w]+/g, WORDNOGLO = /[\w]+/, RANGE = 500;
+
+        CodeMirror.registerHelper("hint", "anyword", function(editor, options) {
+          var wordNoGlo = options && options.word || WORDNOGLO;
+          var word = options && options.word || WORD;
+          var range = options && options.range || RANGE;
+          var cur = editor.getCursor(), curLine = editor.getLine(cur.line);
+          var start = cur.ch, end = start;
+          while (end < curLine.length && wordNoGlo.test(curLine.charAt(end))){
+            ++end;
+          }
+          var cas = curLine.charAt(start-1)
+          while (start && wordNoGlo.test(cas)){
+            start--;
+            cas = curLine.charAt(start-1);
+
+          }
+          var curWord = start != end && curLine.slice(start, end);
+
+
+          var liste = [], seen = {};
+          function scan(dir) {
+            var line = cur.line, end = Math.min(Math.max(line + dir * range, editor.firstLine()), editor.lastLine()) + dir;
+            for (; line != end; line += dir) {
+              var text = editor.getLine(line), m;
+              word.lastIndex = 0;
+              while (m = word.exec(text)) {
+                if ((!curWord || m[0].indexOf(curWord) == 0) && !seen.hasOwnProperty(m[0]) && m[0] != curWord) {
+                  seen[m[0]] = true;
+                  liste.push(m[0]);
+                }
+              }
+            }
+          }
+
+          scan(-1);
+          scan(1);
+
+          var keywords = ["AddTable","CreateForm","ReadEditComponent","ReadForm","ReadWriteForm","Table","UpdateForm","any","appearsInMenu","auditAll","auditChanges","auditNone","businessAction","button","cascadeTypeRemove","component","customListType","customLogicType","customNumberType","customTextType","customTimeType","date","dateAndTime","domain","entity","extends","external","externalEntity","for","given","guiModel","handleLikeAttribute","inTheFuture","inThePast","listOf","long","mainFeature","mainview","manyToMany","manyToOne","navigatesTo","noBarrakudaKeyWord","noJavaKeyWord","normal","oneToMany","oneToOne","optional","package","password","pointNumber","purpose","relComponent","searchable","serviceModel","suffices","then","time","type","valueObject","version","view"];
+          keywords.forEach(function(keyword){
+            if(!curWord || (keyword.indexOf(curWord) == 0 && liste.indexOf(keyword) == -1)){
+              liste.push(keyword);
+            }
+          });
+
+          return {list: liste, from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end)};
+        });
+
+        var code = this.$.code;
+
+        this.editor = CodeMirror(code, {
+          value: this.value,
+          lineNumbers: true,
+          extraKeys: {"Ctrl-Space": "autocomplete"},
+          theme: this.theme,
+          mode: "barrakuda"
+        });
+      }
+
+    });
+  </script>
+</dom-module>

@@ -83,6 +83,8 @@ Simple Editor for Barrakuda
       properties: {
         theme: { type: String, value: "default" },
 
+        lineNumbers: {type: Boolean, value: false},
+
         value: {type: String, value: function () {
           return this.value || this.textContent;
         }}
@@ -214,7 +216,7 @@ Simple Editor for Barrakuda
 
         this.editor = CodeMirror(code, {
           value: this.value,
-          lineNumbers: true,
+          lineNumbers: this.lineNumbers,
           extraKeys: {"Ctrl-Space": "autocomplete"},
           theme: this.theme,
           mode: "barrakuda"

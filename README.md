@@ -4,7 +4,7 @@ Simple Editor for Barrakuda
 
 ## Use
 ```
-<barrakuda-editor theme="dracula"> Init Text </barrakuda-editor>
+<barrakuda-editor theme="dracula" line-numbers> Init Text </barrakuda-editor>
 ...
 <script>
  document.querySelector('barrakuda-editor').refresh();
@@ -14,6 +14,7 @@ Simple Editor for Barrakuda
 ### Properties:
 
 * theme: Code Mirror theme to use, on missing property the default will be used
+* line-numbers: Write this property to activate line numbers. 
 
 
 ### InnerHTML:
